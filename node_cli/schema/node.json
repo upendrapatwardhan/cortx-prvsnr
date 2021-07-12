@@ -1,0 +1,37 @@
+{
+  "name": "node",
+  "description": "Node commands",
+  "sub_commands": [
+    {
+      "name": "prepare",
+      "description": "Node preparation",
+      "sub_commands": [
+         {
+           "name": "network",
+           "description": "Node network configuration",
+           "args": [
+           {
+             "flag": "hostname",
+             "type": "str",
+             "help": "Specify the hostname for system"
+           },
+           {
+              "flag": "args",
+              "default": [],
+              "suppress_help": true,
+              "nargs": "?",
+              "help": ""
+           }
+           ],
+           "comm": {
+              "type": "direct",
+              "target": "cortx_setup.commands",
+              "method": "run",
+              "class": "NodePrepareNetwork"
+           }
+
+        }
+      ]
+    }
+  ]
+}
