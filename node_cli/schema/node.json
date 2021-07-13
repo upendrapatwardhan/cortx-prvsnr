@@ -5,13 +5,15 @@
     {
       "name": "prepare",
       "description": "Node preparation",
+      "permissions_tag": "bypass",
       "sub_commands": [
          {
            "name": "network",
            "description": "Node network configuration",
+           "permissions_tag": "bypass",
            "args": [
            {
-             "flag": "hostname",
+             "flag": "--hostname",
              "type": "str",
              "help": "Specify the hostname for system"
            },

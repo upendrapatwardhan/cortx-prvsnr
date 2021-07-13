@@ -26,6 +26,24 @@ from cmd import Cmd
 import pathlib
 import argparse
 
+
+
+class Response(object):
+    def __init__(self, rc=0, output=''):
+        self._rc = int(rc)
+        self._output = output
+
+    def output(self):
+        return self._output
+
+    def rc(self):
+        return self._rc
+
+    def __str__(self):
+        return '%d: %s' % (self._rc, self._output)
+
+
+
 class NodeCli(Cmd):
     def __init__(self, args):
         super(NodeCli, self).__init__()
@@ -38,10 +56,10 @@ class NodeCli(Cmd):
 
     def preloop(self):
         #TODO Set Logger
-        Log.init("cortxcli",
+        Log.init("nodecli",
              backup_count = 10,
              file_size_in_mb = 10,
-             log_path = '/var/log/seagate/nodecli.log',
+             log_path = '/var/log/seagate/nodecli/',
              level = 'INFO')
 
     def emptyline(self):
@@ -56,19 +74,29 @@ class NodeCli(Cmd):
         obj = CliClient()
         response = obj.call(command)
         if response:
+            # convert dict response in Response object 
+            # to fit in cli framework format.
+            response = Response(output=response)
             command.process_response(out=sys.stdout, err=sys.stderr,
                                  response=response)
 
     def default(self, cmd):
         try:
+            # TODO: make below configs global use of config file
             cmd_dir = '/opt/seagate/cortx/provisioner/node_cli/schema'
-            command = CommandFactory.get_command(self.args, component_cmd_dir=cmd_dir)
+            # permission to fit in cli framework
+            permissions = {
+                'node': {'bypass': True},
+                'cluster': {'bypass': True},
+                'storageset': {'bypass': True}
+            }
+            command = CommandFactory.get_command(self.args, component_cmd_dir=cmd_dir, permissions=permissions)
             channel_name = f"""process_{command.comm.get("type", "")}_command"""
             if not hasattr(self, channel_name):
                 err_str = f"Invalid communication protocol {command.comm.get('type','')} selected."
                 sys.stderr(err_str)
             getattr(self, channel_name)(command)
-            Log.info(f"{cmd}: Command executed")
+            Log.debug(f"{cmd}: Command executed")
         except SystemExit:
             Log.debug(f" Command executed system exit")
         except KeyboardInterrupt:
