@@ -212,6 +212,13 @@ GLUSTERFS_VOLUME_NAME_SALT_JOBS = 'volume_salt_cache_jobs'
 GLUSTERFS_VOLUME_PRVSNR_DATA = Path('/srv/glusterfs/volume_prvsnr_data')
 GLUSTERFS_VOLUME_NAME_PRVSNR_DATA = 'volume_prvsnr_data'
 
+GLUSTERFS_VOLUME_DATA= Path('/srv/glusterfs/volume_data')
+GLUSTERFS_VOLUME_NAME_DATA= 'volume_data'
+GLUSTERFS_VOLUME_LOG= Path('/srv/glusterfs/log_data')
+GLUSTERFS_VOLUME_NAME_LOG= 'log_data'
+GLUSTERFS_VOLUME_CONFIG= Path('/srv/glusterfs/config_data')
+GLUSTERFS_VOLUME_NAME_CONFIG= 'config_data'
+
 GLUSTERFS_VOLUME_FILEROOT_DIR = GLUSTERFS_VOLUME_PRVSNR_DATA / 'srv/salt'
 GLUSTERFS_VOLUME_PILLAR_DIR = GLUSTERFS_VOLUME_PRVSNR_DATA / 'srv/pillar'
 

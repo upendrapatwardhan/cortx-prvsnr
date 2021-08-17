@@ -18,7 +18,7 @@
 from typing import List, Type, Optional
 # import socket
 import logging
-
+import importlib
 from .. import (
     inputs,
     config
@@ -62,6 +62,23 @@ class SetupGluster(SetupCmdBase, CommandParserFillerMixin):
         pillar_all_dir = profile_paths['salt_pillar_dir'] / 'groups/all'
         pillar_all_dir.mkdir(parents=True, exist_ok=True)
 
+        conf = importlib.import_module(
+            'cortx.utils.conf_store.conf_store')
+        conf.Conf.load('provisioner', f'json://{config.CONFSTORE_CLUSTER_CONFIG}')
+
+        PRVSNR_SHARED_DATA = conf.Conf.get (
+            'provisioner',
+            'cortx>storage>shared>data'
+        )
+        PRVSNR_SHARED_LOG = conf.Conf.get (
+            'provisioner',
+            'cortx>storage>shared>log'
+        )
+        PRVSNR_SHARED_CONFIG = conf.Conf.get (
+            'provisioner',
+            'cortx>storage>shared>config'
+        )
+
         glusterfs_pillar_path = pillar_all_dir / 'glusterfs.sls'
         if glusterfs_pillar_path.exists():
             data = load_yaml(glusterfs_pillar_path)['glusterfs']
@@ -76,6 +93,18 @@ class SetupGluster(SetupCmdBase, CommandParserFillerMixin):
                     'volume_prvsnr_data': {
                         'export_dir': str(config.GLUSTERFS_VOLUME_PRVSNR_DATA),
                         'mount_dir': str(config.PRVSNR_DATA_SHARED_DIR)
+                    },
+                    'volume_data': {
+                        'export_dir': str(config.GLUSTERFS_VOLUME_DATA),
+                        'mount_dir': str(PRVSNR_SHARED_DATA)
+                    },
+                    'log_data': {
+                        'export_dir': str(config.GLUSTERFS_VOLUME_LOG),
+                        'mount_dir': str(PRVSNR_SHARED_LOG)
+                    },
+                    'config_data': {
+                        'export_dir': str(config.GLUSTERFS_VOLUME_CONFIG),
+                        'mount_dir': str(PRVSNR_SHARED_CONFIG)
                     }
                 }
             }
