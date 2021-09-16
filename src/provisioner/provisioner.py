@@ -67,7 +67,7 @@ class CortxProvisioner:
         if Conf.get(CortxProvisioner._solution_index, 'cortx') is not None:
             # TODO: Loop through all the secret keys
             # TODO: use /etc/cortx/solution/secret to confirm secret 
-            key = 'cortx>external>kafka>secret':
+            key = 'cortx>external>kafka>secret'
             secret_val = Conf.get(CortxProvisioner._solution_index, key)
             val = None
             with open(os.path.join('/etc/cortx/solution/secret', secret_val)) as f:
