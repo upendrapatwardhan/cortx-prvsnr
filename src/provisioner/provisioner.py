@@ -63,16 +63,16 @@ class CortxProvisioner:
             encryption_key = Cipher.gen_key(cluster_id, 'cluster')
             for key in Conf.get_keys(CortxProvisioner._solution_index):
             # TODO: use /etc/cortx/solution/secret to confirm secret 
-            if key.endswith('secret'):
-                secret_val = Conf.get(CortxProvisioner._solution_index, key)
-                val = None
-                with open(os.path.join('/etc/cortx/solution/secret', secret_val)) as f:
-                    val = f.read()
-                if val is None:
-                    raise CortxProvisionerError(errno.EINVAL,
-                        'Could not find the Secret in /etc/cortx/solution/secret')
-                val = Cipher.encrypt(encryption_key, val.encode('ascii'))
-                Conf.set(CortxProvisioner._solution_index, key, val)
+                if key.endswith('secret'):
+                    secret_val = Conf.get(CortxProvisioner._solution_index, key)
+                    val = None
+                    with open(os.path.join('/etc/cortx/solution/secret', secret_val)) as f:
+                        val = f.read()
+                    if val is None:
+                        raise CortxProvisionerError(errno.EINVAL,
+                            'Could not find the Secret in /etc/cortx/solution/secret')
+                    val = Cipher.encrypt(encryption_key, val.encode('ascii'))
+                    Conf.set(CortxProvisioner._solution_index, key, val)
 
 
     @staticmethod
