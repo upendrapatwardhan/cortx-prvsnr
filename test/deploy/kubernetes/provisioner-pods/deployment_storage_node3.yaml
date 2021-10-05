@@ -4,13 +4,19 @@ metadata:
   name: storage-node3
   labels:
     app: storage-node3
-    id: af733872des4283haf39c21d2501ea3e
+    id: af733872des4283haf39c21d2501ea3e # Same ID should be passed to service_storage_node3.yaml
 spec:
   hostname: storage-node3
   restartPolicy: Never
   nodeSelector:
     node-name: node3
   volumes:
+  - name: node-id
+    downwardAPI:
+      items:
+      - path: "id"
+        fieldRef:
+          fieldPath: metadata.labels['id']
   - name: solution-config
     configMap:
       name: solution-config
@@ -70,6 +76,8 @@ spec:
     volumeMounts:
     - name: solution-config
       mountPath: /etc/cortx/solution
+    - name: node-id
+      mountPath: /etc/cortx/solution/node
     - name: config-node3
       mountPath: /etc/cortx
     - name: cortx-secret
